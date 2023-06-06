@@ -1,0 +1,21 @@
+{
+	"root": true,
+
+	"extends": "@ljharb",
+
+	"rules": {
+		"eqeqeq": ["error", "always", { "null": "ignore" }],
+		"func-style": "warn",
+		"max-statements-per-line": ["error", { "max": 2 }],
+	},
+
+	"overrides": [
+		{
+			"files": "test/**/*",
+			"rules": {
+				"func-name-matching": "off",
+				"max-params": "off",
+			},
+		},
+	],
+}
