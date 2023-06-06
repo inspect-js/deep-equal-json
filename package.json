@@ -1,6 +1,6 @@
 {
 	"name": "deep-equal-json",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"description": "`deep-equal`, but only for JSON-supported values.",
 	"main": "index.js",
 	"exports": {
