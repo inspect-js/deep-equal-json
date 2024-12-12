@@ -4,7 +4,7 @@ var is = require('object-is');
 var isArray = require('isarray');
 var objectKeys = require('object-keys');
 
-var callBound = require('call-bind/callBound');
+var callBound = require('call-bound');
 
 var $sort = callBound('Array.prototype.sort');
 
