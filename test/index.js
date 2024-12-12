@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape');
-require('./_tape');
+var deepEqualTest = require('./_tape');
 var hasSymbols = require('has-symbols')();
 var semver = require('semver');
 var keys = require('object-keys');
@@ -19,7 +19,8 @@ function tag(obj, value) {
 }
 
 test('equal', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ a: [2, 3], b: [4] },
 		{ a: [2, 3], b: [4] },
 		'two equal objects',
@@ -31,28 +32,32 @@ test('equal', function (t) {
 	var obj2 = { b: [4], a: [2, 3] };
 	t.notDeepEqual(keys(obj1), keys(obj2), 'keys are in a different order');
 	t.deepEqual(keys(obj1), keys(obj2).reverse(), 'keys are in opposite order');
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		obj1,
 		obj2,
 		'two equal objects, in different order',
 		true
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ a: 2, b: '4' },
 		{ a: 2, b: 4 },
 		'two loosely equal, strictly inequal objects',
 		false
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ a: 2, b: 4 },
 		{ a: 2, B: 4 },
 		'two inequal objects',
 		false
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		'-000',
 		false,
 		'`false` and `"-000"`',
@@ -63,7 +68,8 @@ test('equal', function (t) {
 });
 
 test('not equal', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ x: 5, y: [6] },
 		{ x: 5, y: 6 },
 		'two inequal objects are',
@@ -74,7 +80,8 @@ test('not equal', function (t) {
 });
 
 test('nested nulls', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		[null, null, null],
 		[null, null, null],
 		'same-length arrays of nulls',
@@ -85,7 +92,8 @@ test('nested nulls', function (t) {
 });
 
 test('objects with strings vs numbers', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		[{ a: 3 }, { b: 4 }],
 		[{ a: '3' }, { b: '4' }],
 		'objects with equivalent string/number values',
@@ -95,19 +103,19 @@ test('objects with strings vs numbers', function (t) {
 });
 
 test('non-objects', function (t) {
-	t.deepEqualTest(3, 3, 'same numbers', true, true);
-	t.deepEqualTest('beep', 'beep', 'same strings', true, true);
-	t.deepEqualTest('3', 3, 'numeric string and number', false);
-	t.deepEqualTest('3', [3], 'numeric string and array containing number', false);
-	t.deepEqualTest(3, [3], 'number and array containing number', false);
+	t.assertion(deepEqualTest, 3, 3, 'same numbers', true, true);
+	t.assertion(deepEqualTest, 'beep', 'beep', 'same strings', true, true);
+	t.assertion(deepEqualTest, '3', 3, 'numeric string and number', false);
+	t.assertion(deepEqualTest, '3', [3], 'numeric string and array containing number', false);
+	t.assertion(deepEqualTest, 3, [3], 'number and array containing number', false);
 
 	t.end();
 });
 
 test('infinities', function (t) {
-	t.deepEqualTest(Infinity, Infinity, '∞ and ∞', true, true);
-	t.deepEqualTest(-Infinity, -Infinity, '-∞ and -∞', true, true);
-	t.deepEqualTest(Infinity, -Infinity, '∞ and -∞', false);
+	t.assertion(deepEqualTest, Infinity, Infinity, '∞ and ∞', true, true);
+	t.assertion(deepEqualTest, -Infinity, -Infinity, '-∞ and -∞', true, true);
+	t.assertion(deepEqualTest, Infinity, -Infinity, '∞ and -∞', false);
 
 	t.end();
 });
@@ -117,7 +125,8 @@ test('Arrays', function (t) {
 	var b = [];
 	b.foo = true;
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		a,
 		b,
 		'two identical arrays, one with an extra property',
@@ -128,7 +137,8 @@ test('Arrays', function (t) {
 });
 
 test('booleans', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		true,
 		true,
 		'trues',
@@ -136,7 +146,8 @@ test('booleans', function (t) {
 		false
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		false,
 		false,
 		'falses',
@@ -144,7 +155,8 @@ test('booleans', function (t) {
 		false
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		true,
 		false,
 		'true and false',
@@ -155,13 +167,15 @@ test('booleans', function (t) {
 });
 
 test('booleans and arrays', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		true,
 		[],
 		'true and an empty array',
 		false
 	);
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		false,
 		[],
 		'false and an empty array',
@@ -200,7 +214,8 @@ test('arrays initiated', function (t) {
 		undefined
 	];
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		a0,
 		a1,
 		'arrays with equal contents are equal',
@@ -241,7 +256,7 @@ test('arrays assigned', function (t) {
 	a1[11] = undefined;
 	a1.length = 12;
 
-	t.deepEqualTest(a0, a1, 'a literal array and an assigned array', true);
+	t.assertion(deepEqualTest, a0, a1, 'a literal array and an assigned array', true);
 	t.end();
 });
 
@@ -276,41 +291,43 @@ test('arrays push', function (t) {
 	a1.push(undefined);
 	a1.length = 12;
 
-	t.deepEqualTest(a0, a1, 'a literal array and a pushed array', true);
+	t.assertion(deepEqualTest, a0, a1, 'a literal array and a pushed array', true);
 	t.end();
 });
 
 test('null == undefined', function (t) {
-	t.deepEqualTest(null, undefined, 'null and undefined', false);
-	t.deepEqualTest([null], [undefined], '[null] and [undefined]', false);
+	t.assertion(deepEqualTest, null, undefined, 'null and undefined', false);
+	t.assertion(deepEqualTest, [null], [undefined], '[null] and [undefined]', false);
 
 	t.end();
 });
 
 test('NaNs', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		NaN,
 		NaN,
 		'two NaNs',
 		true
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ a: NaN },
 		{ a: NaN },
 		'two equiv objects with a NaN value',
 		true
 	);
 
-	t.deepEqualTest(NaN, 1, 'NaN and 1', false);
+	t.assertion(deepEqualTest, NaN, 1, 'NaN and 1', false);
 
 	t.end();
 });
 
 test('zeroes', function (t) {
-	t.deepEqualTest(0, -0, '0 and -0', false);
+	t.assertion(deepEqualTest, 0, -0, '0 and -0', false);
 
-	t.deepEqualTest({ a: 0 }, { a: -0 }, 'two objects with a same-keyed 0/-0 value', false);
+	t.assertion(deepEqualTest, { a: 0 }, { a: -0 }, 'two objects with a same-keyed 0/-0 value', false);
 
 	t.end();
 });
@@ -322,7 +339,8 @@ test('Object.create', { skip: !Object.create }, function (t) {
 	var c = Object.create(a);
 	c.b = 'C';
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		b,
 		c,
 		'two objects with the same [[Prototype]] but a different own property',
@@ -333,7 +351,8 @@ test('Object.create', { skip: !Object.create }, function (t) {
 });
 
 test('Object.create(null)', { skip: !Object.create }, function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		Object.create(null),
 		Object.create(null),
 		'two empty null objects',
@@ -341,7 +360,8 @@ test('Object.create(null)', { skip: !Object.create }, function (t) {
 		true
 	);
 
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		Object.create(null, { a: { value: 'b' } }),
 		Object.create(null, { a: { value: 'b' } }),
 		'two null objects with the same property pair',
@@ -353,7 +373,8 @@ test('Object.create(null)', { skip: !Object.create }, function (t) {
 });
 
 test('object literals', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{ prototype: 2 },
 		{ prototype: '2' },
 		'two loosely equal, strictly inequal prototype properties',
@@ -364,9 +385,9 @@ test('object literals', function (t) {
 });
 
 test('arrays and objects', function (t) {
-	t.deepEqualTest([], {}, 'empty array and empty object', false);
-	t.deepEqualTest([], { length: 0 }, 'empty array and empty arraylike object', false);
-	t.deepEqualTest([1], { 0: 1 }, 'array and similar object', false);
+	t.assertion(deepEqualTest, [], {}, 'empty array and empty object', false);
+	t.assertion(deepEqualTest, [], { length: 0 }, 'empty array and empty arraylike object', false);
+	t.assertion(deepEqualTest, [1], { 0: 1 }, 'array and similar object', false);
 
 	t.end();
 });
@@ -374,20 +395,21 @@ test('arrays and objects', function (t) {
 test('functions', function (t) {
 	function f() {}
 
-	t.deepEqualTest(f, f, 'a function and itself', true, true);
-	t.deepEqualTest([f], [f], 'a function and itself in an array', true, true);
+	t.assertion(deepEqualTest, f, f, 'a function and itself', true, true);
+	t.assertion(deepEqualTest, [f], [f], 'a function and itself in an array', true, true);
 
-	t.deepEqualTest(function () {}, function () {}, 'two distinct functions', false, true);
-	t.deepEqualTest([function () {}], [function () {}], 'two distinct functions in an array', false, true);
+	t.assertion(deepEqualTest, function () {}, function () {}, 'two distinct functions', false, true);
+	t.assertion(deepEqualTest, [function () {}], [function () {}], 'two distinct functions in an array', false, true);
 
-	t.deepEqualTest(f, {}, 'function and object', false, true);
-	t.deepEqualTest([f], [{}], 'function and object in an array', false, true);
+	t.assertion(deepEqualTest, f, {}, 'function and object', false, true);
+	t.assertion(deepEqualTest, [f], [{}], 'function and object in an array', false, true);
 
 	t.end();
 });
 
 test('object and null', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		{},
 		null,
 		'null and an object',
@@ -398,7 +420,8 @@ test('object and null', function (t) {
 });
 
 test('error = Object', function (t) {
-	t.deepEqualTest(
+	t.assertion(
+		deepEqualTest,
 		new Error('a'),
 		{ message: 'a' },
 		false
@@ -412,13 +435,13 @@ test('[[Prototypes]]', function (t) {
 	var instance = new C();
 	delete instance.constructor;
 
-	t.deepEqualTest({}, instance, 'two identical objects with different [[Prototypes]]', true);
+	t.assertion(deepEqualTest, {}, instance, 'two identical objects with different [[Prototypes]]', true);
 
 	t.test('Dates with different prototypes', { skip: !hasProto }, function (st) {
 		var d1 = new Date(0);
 		var d2 = new Date(0);
 
-		st.deepEqualTest(d1, d2, 'two dates with the same timestamp', true);
+		st.assertion(deepEqualTest, d1, d2, 'two dates with the same timestamp', true);
 
 		var newProto = {
 			__proto__: Date.prototype
@@ -426,7 +449,7 @@ test('[[Prototypes]]', function (t) {
 		d2.__proto__ = newProto; // eslint-disable-line no-proto
 		st.ok(d2 instanceof Date, 'd2 is still a Date instance after tweaking [[Prototype]]');
 
-		st.deepEqualTest(d1, d2, 'two dates with the same timestamp and different [[Prototype]]', true);
+		st.assertion(deepEqualTest, d1, d2, 'two dates with the same timestamp and different [[Prototype]]', true);
 
 		st.end();
 	});
@@ -441,33 +464,33 @@ test('toStringTag', { skip: !hasSymbols || !Symbol.toStringTag }, function (t) {
 	var o2 = {};
 	t.equal(Object.prototype.toString.call(o2), '[object Object]', 'o2: original Symbol.toStringTag works');
 
-	t.deepEqualTest(o1, o2, 'two normal empty objects', true);
+	t.assertion(deepEqualTest, o1, o2, 'two normal empty objects', true);
 
 	o2[Symbol.toStringTag] = 'jifasnif';
 	t.equal(Object.prototype.toString.call(o2), '[object jifasnif]', 'o2: modified Symbol.toStringTag works');
 
-	t.deepEqualTest(o1, o2, 'two normal empty objects with different toStringTags', true);
+	t.assertion(deepEqualTest, o1, o2, 'two normal empty objects with different toStringTags', true);
 
 	t.end();
 });
 
 test('boxed primitives', function (t) {
-	t.deepEqualTest(Object(false), false, 'boxed and primitive `false`', false);
-	t.deepEqualTest(Object(true), true, 'boxed and primitive `true`', false);
-	t.deepEqualTest(Object(3), 3, 'boxed and primitive `3`', false);
-	t.deepEqualTest(Object(NaN), NaN, 'boxed and primitive `NaN`', false);
-	t.deepEqualTest(Object(''), '', 'boxed and primitive `""`', false);
-	t.deepEqualTest(Object('str'), 'str', 'boxed and primitive `"str"`', false);
+	t.assertion(deepEqualTest, Object(false), false, 'boxed and primitive `false`', false);
+	t.assertion(deepEqualTest, Object(true), true, 'boxed and primitive `true`', false);
+	t.assertion(deepEqualTest, Object(3), 3, 'boxed and primitive `3`', false);
+	t.assertion(deepEqualTest, Object(NaN), NaN, 'boxed and primitive `NaN`', false);
+	t.assertion(deepEqualTest, Object(''), '', 'boxed and primitive `""`', false);
+	t.assertion(deepEqualTest, Object('str'), 'str', 'boxed and primitive `"str"`', false);
 
 	t.test('symbol', { skip: !hasSymbols }, function (st) {
 		var s = Symbol('');
-		st.deepEqualTest(Object(s), s, 'boxed and primitive `Symbol()`', false);
+		st.assertion(deepEqualTest, Object(s), s, 'boxed and primitive `Symbol()`', false);
 		st.end();
 	});
 
 	t.test('bigint', { skip: typeof BigInt !== 'function' }, function (st) {
 		var hhgtg = BigInt(42);
-		st.deepEqualTest(Object(hhgtg), hhgtg, 'boxed and primitive `BigInt(42)`', false);
+		st.assertion(deepEqualTest, Object(hhgtg), hhgtg, 'boxed and primitive `BigInt(42)`', false);
 		st.end();
 	});
 
@@ -477,7 +500,7 @@ test('boxed primitives', function (t) {
 		var b = Object(5);
 		b.valueOf = function () { throw new Error('failed'); };
 
-		st.deepEqualTest(a, b, 'two boxed numbers with a thrower valueOf', false);
+		st.assertion(deepEqualTest, a, b, 'two boxed numbers with a thrower valueOf', false);
 
 		st.end();
 	});
@@ -491,7 +514,7 @@ test('getters', { skip: !Object.defineProperty }, function (t) {
 	var b = {};
 	Object.defineProperty(b, 'a', { enumerable: true, get: function () { return 6; } });
 
-	t.deepEqualTest(a, b, 'two objects with the same getter but producing different values', false);
+	t.assertion(deepEqualTest, a, b, 'two objects with the same getter but producing different values', false);
 
 	t.end();
 });
@@ -511,7 +534,7 @@ test('fake arrays: extra keys will be tested', { skip: !hasProto || isBrokenNode
 		});
 	}
 
-	t.deepEqualTest(a, [1, 1], 'fake and real array with same contents and [[Prototype]]', false);
+	t.assertion(deepEqualTest, a, [1, 1], 'fake and real array with same contents and [[Prototype]]', false);
 
 	var b = tag(/abc/, 'Array');
 	b.__proto__ = Array.prototype; // eslint-disable-line no-proto
@@ -521,7 +544,7 @@ test('fake arrays: extra keys will be tested', { skip: !hasProto || isBrokenNode
 			enumerable: false
 		});
 	}
-	t.deepEqualTest(b, ['a', 'b', 'c'], 'regex faking as array, and array', false);
+	t.assertion(deepEqualTest, b, ['a', 'b', 'c'], 'regex faking as array, and array', false);
 
 	t.end();
 });

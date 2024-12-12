@@ -1,6 +1,5 @@
 'use strict';
 
-var Test = require('tape/lib/test');
 var is = require('object-is');
 
 var deepEqual = require('../');
@@ -15,7 +14,7 @@ var equal = process.env.ASSERT ? function assertDeepEqual(a, b) {
 	return true;
 } : deepEqual;
 
-Test.prototype.deepEqualTest = function deepEqualTest(a, b, message, isStrictEqual, skipReversed) {
+module.exports = function deepEqualTest(a, b, message, isStrictEqual, skipReversed) {
 	var actual = equal(a, b);
 	var suffix = isStrictEqual ? ' are equal' : ' are not equal';
 	this.equal(actual, !!isStrictEqual, message + suffix);
